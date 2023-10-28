@@ -6,10 +6,14 @@ import axios from "axios";
 
 
 export default function EditarUsuario() {
+
+     // const url = "http://localhost:4040" //para local
+    //const url = "http://129.146.68.51/aluno40-pfsii" //para infra
+
     const {id} = useParams();
     const [data, setData] = useState([])
     useEffect(() => {
-        axios.get('https://129.146.68.51/aluno40-pfsii/usuarios/'+ id)
+        axios.get(`http://localhost:4040/usuarios/`+ id)
         .then(res => {
             console.log(res)
             setData(res.data[0]); 
@@ -19,7 +23,7 @@ export default function EditarUsuario() {
 
     function handleSubmit(event) {
         event.preventDefault()
-        axios.put('https://129.146.68.51/aluno40-pfsii/usuarios/'+ id, data)
+        axios.put(`http://localhost:4040/usuarios/`+ id, data)
         .then(res => {
             alert("Os dados do usuário foram atualizados!")
         })

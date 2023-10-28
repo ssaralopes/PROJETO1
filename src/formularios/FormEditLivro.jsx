@@ -9,8 +9,11 @@ export default function EditarLivro() {
     const {id} = useParams();
     const [data, setData] = useState([])
 
+    // const url = "http://localhost:4040" //para local
+    //const url = "http://129.146.68.51/aluno40-pfsii" //para infra
+
     useEffect(() => {
-        axios.get('https://129.146.68.51/aluno40-pfsii/livros/'+ id)
+        axios.get(`http://localhost:4040/livros/`+ id)
         .then(res => {
             console.log(res)
             setData(res.data[0]); 
@@ -20,7 +23,7 @@ export default function EditarLivro() {
 
     function handleSubmit(event) {
         event.preventDefault()
-        axios.put('https://129.146.68.51/aluno40-pfsii/livros/'+ id, data)
+        axios.put(`http://localhost:4040/livros/`+ id, data)
         .then(res => {
             alert("Informações atualizadas com sucesso!")
         })

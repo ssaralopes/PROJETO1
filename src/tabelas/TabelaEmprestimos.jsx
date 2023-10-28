@@ -13,44 +13,40 @@ export default function TabelaEmprestimos() {
 
   // Função para carregar dados de usuários, livros e empréstimos
 
-  //const url = "http://localhost:4040" //para local
-  const url = "http://129.146.68.51/aluno40-pfsii" //para infra
+  const url = "http://localhost:4040" //para local
+  //const url = "http://129.146.68.51/aluno40-pfsii" //para infra
 
   useEffect(() => {
-    axios.get(url+"/usuarios").then((res) => {
+    axios.get(url + "/usuarios").then((res) => {
       setUsuarios(res.data);
     });
 
-    axios.get(url+"/livros").then((res) => {
+    axios.get(url + "/livros").then((res) => {
       setLivros(res.data);
     });
 
-    axios.get(url+"/emprestimos").then((res) => {
+    axios.get(url + "/emprestimos").then((res) => {
       setEmprestimos(res.data);
     });
-  }, []);
+  }, [emprestimos]); // Adicione 'emprestimos' como dependência
 
   // Função para registrar um empréstimo
-const postData = (e) => {
+  const postData = (e) => {
     e.preventDefault(); // Impede o comportamento padrão de envio do formulário
-  
+
     if (usuarioSelecionado && livroSelecionado && dataEmprestimo) {
       const dataDevolucao = new Date(dataEmprestimo);
       dataDevolucao.setDate(dataDevolucao.getDate() + prazoDevolucao);
-  
+
       axios
-        .post(url+'/emprestimos', {
+        .post(url + "/emprestimos", {
           id_usuario: usuarioSelecionado,
           id_livro: livroSelecionado,
           data_emprestimo: dataEmprestimo,
           data_devolucao: dataDevolucao.toISOString(),
-          renovacao: false
+          renovacao: false,
         })
         .then((response) => {
-          console.log(response);
-          console.log(response.data);
-  
-          // Verifique se o status da resposta indica sucesso (código 201)
           if (response.status === 201) {
             // Atualize o estado apenas se o registro for bem-sucedido
             setEmprestimos([...emprestimos, response.data]);
@@ -67,6 +63,39 @@ const postData = (e) => {
         });
     }
   };
+  const dataFormatada = (data)=>{
+    //transforma data no tipo Date
+    let aux = new Date(data)
+    //Converte resultado do [getDate, getMonth] para string e faz um if (?) else (:) se o tamanho da string 
+    //for menor que 2 coloca o zero na frente se não envia normal o valor 
+    let dia = String(aux.getDate()).length < 2 ? "0" + String(aux.getDate()):String(aux.getDate())
+    let mes = String(aux.getMonth()).length < 2 ? "0" + String(aux.getMonth()):String(aux.getMonth())
+    let ano = aux.getFullYear()
+    return `${dia}/${mes}/${ano}`
+  }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// const registrarDevolucao = (id) => {
+//   // Lógica para registrar a devolução de um empréstimo
+//   const updatedEmprestimos = emprestimos.map((emprestimo) => {
+//     if (emprestimo.id === id) {
+//       emprestimo.renovacao = "Devolução Efetivada";
+//     }
+//     return emprestimo;
+//   });
+//   setEmprestimos(updatedEmprestimos);
+// };
+
+// const solicitarRenovacao = (id) => {
+//   // Lógica para solicitar a renovação de um empréstimo
+//   const updatedEmprestimos = emprestimos.map((emprestimo) => {
+//     if (emprestimo.id === id) {
+//       emprestimo.renovacao = "Renovação Solicitada";
+//     }
+//     return emprestimo;
+//   });
+//   setEmprestimos(updatedEmprestimos);
+// };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
     <Container>
@@ -81,26 +110,6 @@ const postData = (e) => {
             />
           </Form>
         </div>
-        <Table className="table">
-          <thead>
-            <tr>
-              <th>Usuário</th>
-              <th>Livro</th>
-              <th>Data Empréstimo</th>
-              <th>Data Devolução</th>
-            </tr>
-          </thead>
-          <tbody>
-                {emprestimos.map((emprestimo, id) => (
-                    <tr key={id}>
-                    <td>{emprestimo.nome_usuario}</td>
-                    <td>{emprestimo.nome_livro}</td>
-                    <td>{emprestimo.data_emprestimo}</td>
-                    <td>{emprestimo.data_devolucao}</td>
-                    </tr>
-                ))}
-         </tbody>
-        </Table>
         <Form onSubmit={postData}>
           <Form.Group controlId="formUsuario">
             <Form.Label>Usuário</Form.Label>
@@ -138,12 +147,63 @@ const postData = (e) => {
               type="date"
               value={dataEmprestimo}
               onChange={(e) => setDataEmprestimo(e.target.value)}
+              className="mb-3"
             />
           </Form.Group>
-          <Button variant="success" type="submit">
+          <Button  className="mb-5 " variant="success" type="submit"  >
             Registrar Empréstimo
           </Button>
         </Form>
+        <Table className="table">
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>Livro</th>
+              <th>Data Empréstimo</th>
+              <th>Data Devolução</th>
+              {/* <th>Status Devolução</th>
+              <th>Ações</th> */}
+            </tr>
+          </thead>
+          <tbody>
+                {emprestimos.map((emprestimo, id) => (
+                    <tr key={id}>
+                      <td>{emprestimo.nome_usuario}</td>
+                      <td>{emprestimo.nome_livro}</td>
+                      <td>{dataFormatada(emprestimo.data_emprestimo)}</td>
+                      <td>{dataFormatada(emprestimo.data_devolucao)}</td>
+                      {/* <td>{emprestimo.renovacao}</td>
+                      <td>
+                          {emprestimo.renovacao === "Renovação Solicitada" ? (
+                            <Button variant="secondary" >
+                              Renovação
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="info"
+                              onClick={() => solicitarRenovacao(emprestimo.id)}
+                            >
+                              Solicitar Renovação
+                            </Button>
+                          )}
+                          {emprestimo.renovacao === "Devolução Efetivada" ? (
+                            <Button variant="success" disabled>
+                              Devolução
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="danger"
+                              onClick={() => registrarDevolucao(emprestimo.id)}
+                            >
+                              Registrar Devolução
+                            </Button>
+                          )}
+                </td> */}
+                    </tr>
+                ))}
+         </tbody>
+        </Table>
+        {/* linha onde ficava formulário de empréstimo em código original */}
       </div>
     </Container>
   );

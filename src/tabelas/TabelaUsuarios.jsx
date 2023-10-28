@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 
 
 export default function TabelaUsuarios() {
-    //const url = "http://localhost:4040" //para local
-    const url = "http://129.146.68.51/aluno40-pfsii" //para infra
+    const url = "http://localhost:4040" //para local
+    //const url = "http://129.146.68.51/aluno40-pfsii" //para infra
 
     // 4- Depois você criou essa função para buscar os dados la na url jason-server com o nome parrado como parâmetro
 

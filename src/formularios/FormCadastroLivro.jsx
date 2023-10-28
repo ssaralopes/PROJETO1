@@ -31,8 +31,10 @@ export default function FormCadLivro() {
     // 3- depois você criou essa função pra quando o botão de enviar dados for clicado
     //    os dados armazenados pelas vaiáveis nome, cpf, email e postData sejam adicionados
     //    na localhost definida pelo axios.post:
+    // 
+    // url infraestrutura: 'https://129.146.68.51/aluno40-pfsii/livros'
          const postData = () => {
-                axios.post('https://129.146.68.51/aluno40-pfsii/livros', {idlivros, titulo, autor, publicado, local, material, idioma, original})
+                axios.post('http://localhost:4040/livros', {idlivros, titulo, autor, publicado, local, material, idioma, original})
                 .then(res => {
                     console.log(res);
                     console.log(res.data);

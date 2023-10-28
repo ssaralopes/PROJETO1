@@ -24,11 +24,13 @@ export default function FormCadUsuario() {
         //     console.log(email);  
         // }
 
+         // const url = "http://localhost:4040" //para local
+         //const url = "http://129.146.68.51/aluno40-pfsii" //para infra
     // 3- depois você criou essa função pra quando o botão de enviar dados for clicado
     //    os dados armazenados pelas vaiáveis nome, cpf, email e postData sejam adicionados
     //    na localhost definida pelo axios.post:
          const postData = () => {
-                axios.post('https://129.146.68.51/aluno40-pfsii/usuarios', {nome, cpf, rg, email, endereco})
+                axios.post('http://localhost:4040/usuarios', {nome, cpf, rg, email, endereco})
                 .then(res => {
                     console.log(res);
                     console.log(res.data);
