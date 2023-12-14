@@ -7,9 +7,6 @@ import axios from "axios";
 
 export default function EditarUsuario() {
 
-     // const url = "http://localhost:4040" //para local
-    //const url = "http://129.146.68.51/aluno40-pfsii" //para infra
-
     const {id} = useParams();
     const [data, setData] = useState([])
     useEffect(() => {

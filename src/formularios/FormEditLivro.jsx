@@ -9,9 +9,6 @@ export default function EditarLivro() {
     const {id} = useParams();
     const [data, setData] = useState([])
 
-    // const url = "http://localhost:4040" //para local
-    //const url = "http://129.146.68.51/aluno40-pfsii" //para infra
-
     useEffect(() => {
         axios.get(`http://localhost:4040/livros/`+ id)
         .then(res => {
